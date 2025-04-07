@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RIOT IDS/IPS - Real-time IoT Intrusion Detection and Prevention System using Machine Learning">
+    <title>RIOT IDS/IPS - IoT Security System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --danger: #ef233c;
+            --success: #28a745;
+            --warning: #ffc107;
+            --light: #f8f9fa;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray: #6c757d;
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            opacity: 0;
+            animation: fadeIn 1s 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin: 8rem 0 4rem;
+            position: relative;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 16px;
+            color: var(--primary);
+            font-size: 2.5rem;
+            animation: pulse 3s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(67, 97, 238, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+
+        .logo-text {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--light) 50%, var(--primary) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: var(--transition);
+        }
+
+        .logo:hover .logo-text {
+            background-position: left bottom;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* About Project Section */
+        .about-project {
+            background: var(--dark-light);
+            border-radius: 16px;
+            padding: 4rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-project::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(67, 97, 238, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-text h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+
+        .about-text h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), transparent);
+            border-radius: 3px;
+        }
+
+        .about-text p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .about-image {
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .about-image-inner {
+            position: relative;
+            transform-style: preserve-3d;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateY(0deg); }
+            50% { transform: translateY(-20px) rotateY(5deg); }
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: rotateY(10deg);
+            transition: var(--transition);
+        }
+
+        .about-image:hover img {
+            transform: rotateY(0deg);
+        }
+
+        /* Project Showcase */
+        .showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .card {
+            background: var(--dark-light);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+            transform: translateY(50px);
+            opacity: 0;
+        }
+
+        .card:nth-child(1) { animation: slideUp 0.8s 1s forwards; }
+        .card:nth-child(2) { animation: slideUp 0.8s 1.2s forwards; }
+        .card:nth-child(3) { animation: slideUp 0.8s 1.4s forwards; }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .card:hover {
+            transform: translateY(-10px) !important;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+            border-color: rgba(67, 97, 238, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(67, 97, 238, 0.1);
+            border-radius: 12px;
+            color: var(--primary);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .card:hover .card-icon {
+            background: var(--primary);
+            color: var(--light);
+            transform: rotate(10deg);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--light);
+        }
+
+        .card-body {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-item {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--light);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--gray);
+            color: var(--gray);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            margin: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), transparent);
+            border-radius: 3px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            background: var(--dark-light);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+
+        .feature-item:hover {
+            border-left-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .feature-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Getting Started */
+        .getting-started {
+            background: var(--dark-light);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 4rem 0;
+        }
+
+        .steps {
+            margin-top: 2rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .step-desc {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--light);
+            border-left: 3px solid var(--primary);
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
+
+        /* Author Section */
+        .author-section {
+            margin: 6rem 0;
+            text-align: center;
+        }
+
+        .author-card {
+            background: var(--dark-light);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        .author-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent 0deg,
+                transparent 90deg,
+                var(--primary) 90deg,
+                var(--primary) 180deg,
+                transparent 180deg,
+                transparent 270deg,
+                var(--primary) 270deg,
+                var(--primary) 360deg
+            );
+            animation: rotate 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .author-card::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            background: var(--dark-light);
+            border-radius: 12px;
+            z-index: -1;
+        }
+
+        .author-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .author-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.3);
+            transition: var(--transition);
+        }
+
+        .author-avatar:hover {
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.4);
+        }
+
+        .author-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+        }
+
+        .author-title {
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .author-bio {
+            color: var(--gray);
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .author-social {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            font-size: 1.2rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .social-link.github:hover {
+            background: #333;
+            color: white;
+        }
+
+        .social-link.linkedin:hover {
+            background: #0077b5;
+            color: white;
+        }
+
+        .social-link.twitter:hover {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .social-link.email:hover {
+            background: #d44638;
+            color: white;
+        }
+
+        .social-link.portfolio:hover {
+            background: #6e5494;
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 4rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-image {
+                order: -1;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-bar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .header {
+                margin-top: 6rem;
+            }
+
+            .logo {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo-text {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1.1rem;
+                padding: 0 1rem;
+            }
+
+            .about-project {
+                padding: 2rem;
+            }
+
+            .author-card {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .author-avatar {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .author-info h3 {
+                font-size: 1.5rem;
+            }
+            
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles-js"></div>
+    
+    <nav class="nav-bar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1 class="logo-text">RIOT</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#about" class="nav-link">About</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#getting-started" class="nav-link">Get Started</a>
+            <a href="#author" class="nav-link">Author</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h1 class="logo-text">RIOT IDS/IPS</h1>
+            </div>
+            <p class="tagline">Next-generation IoT security solution combining machine learning and real-time monitoring to protect connected devices</p>
+        </header>
+
+        <!-- About Project Section -->
+        <section class="about-project" id="about">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About The Project</h2>
+                    <p>RIOT IDS/IPS (Real-time IoT Intrusion Detection and Prevention System) is an advanced security framework designed specifically for IoT environments. With the exponential growth of connected devices, securing IoT networks has become a critical challenge that traditional security solutions often fail to address adequately.</p>
+                    <p>Our system leverages the power of machine learning with a dual-model approach, combining supervised (Random Forest) and unsupervised (Isolation Forest) algorithms to detect both known attack patterns and zero-day threats. The solution provides real-time monitoring, automated threat mitigation, and comprehensive analytics through an intuitive dashboard.</p>
+                    <p>What sets RIOT apart is its ability to learn and adapt to specific IoT environments, reducing false positives while maintaining high detection accuracy. The system is designed to be lightweight enough to run on edge devices while scalable for large deployments.</p>
+                </div>
+                <div class="about-image">
+                    <div class="about-image-inner">
+                        <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="IoT Security Concept">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Showcase Section -->
+        <div class="showcase">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h2 class="card-title">Dashboard</h2>
+                </div>
+                <div class="card-body">
+                    <p>Interactive security dashboard showing real-time device monitoring, threat detection, and automated response capabilities.</p>
+                    <div class="tech-stack">
+                        <span class="tech-item">HTML5</span>
+                        <span class="tech-item">CSS3</span>
+                        <span class="tech-item">JavaScript</span>
+                        <span class="tech-item">Chart.js</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="dashboard.html" class="btn btn-primary">
+                        <i class="fas fa-external-link-alt"></i> Live Demo
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2 class="card-title">Backend</h2>
+                </div>
+                <div class="card-body">
+                    <p>Python Flask server with machine learning models (Random Forest + Isolation Forest) for anomaly detection.</p>
+                    <div class="tech-stack">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">Flask</span>
+                        <span class="tech-item">Scikit-learn</span>
+                        <span class="tech-item">Pandas</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="https://github.com/g0w6y/RIOT/" target="_blank" class="btn btn-outline">
+                        <i class="fab fa-github"></i> View Code
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <h2 class="card-title">Attack Simulator</h2>
+                </div>
+                <div class="card-body">
+                    <p>Realistic IoT attack simulation with multiple threat vectors (DDoS, brute force, injection, etc.) for testing.</p>
+                    <div class="tech-stack">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">Faker</span>
+                        <span class="tech-item">Logging</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a href="#getting-started" class="btn btn-outline">
+                        <i class="fas fa-book"></i> Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Real-time Monitoring</h3>
+                    <p class="feature-desc">Track all IoT devices and network traffic with live updates every 2 seconds.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">ML-Powered Detection</h3>
+                    <p class="feature-desc">Combines Random Forest (supervised) and Isolation Forest (unsupervised) models.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <h3 class="feature-title">Automated Prevention</h3>
+                    <p class="feature-desc">Auto-blocks malicious devices after 3 attack attempts (configurable threshold).</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <h3 class="feature-title">Telegram Alerts</h3>
+                    <p class="feature-desc">Instant notifications for critical threats via Telegram bot.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-csv"></i>
+                    </div>
+                    <h3 class="feature-title">Log Export</h3>
+                    <p class="feature-desc">Download complete threat logs in CSV format for analysis.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3 class="feature-title">Customizable</h3>
+                    <p class="feature-desc">Adjust sensitivity, attack thresholds, and notification preferences.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Getting Started Section -->
+        <section class="getting-started" id="getting-started">
+            <h2 class="section-title">Getting Started</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Install Dependencies</h3>
+                        <p class="step-desc">Ensure you have Python 3.8+ installed, then install required packages:</p>
+                        <pre><code>pip install flask pandas scikit-learn joblib faker</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Configure Telegram (Optional)</h3>
+                        <p class="step-desc">Edit <code>dashboard.html</code> with your Telegram bot token and chat ID:</p>
+                        <pre><code>const TELEGRAM_BOT_TOKEN = "your_bot_token";
+const TELEGRAM_CHAT_ID = "your_chat_id";</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Run the System</h3>
+                        <p class="step-desc">Start the backend server (default port: 7000):</p>
+                        <pre><code>python main.py</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Access Dashboard</h3>
+                        <p class="step-desc">Open in your browser:</p>
+                        <pre><code>http://localhost:7000/dashboard</code></pre>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Simulate Attacks (Testing)</h3>
+                        <p class="step-desc">Generate test data (run in separate terminal):</p>
+                        <pre><code>python attacker.py --duration 10 --attack-ratio 0.3</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Author Section -->
+        <section class="author-section" id="author">
+            <div class="author-card">
+                <div class="author-content">
+                    <img src="https://i.ibb.co/v6DCzMvq/Screenshot-20250317-100153-Telegram.jpg" alt="Gouri Sankar A" class="author-avatar">
+                    <div class="author-info">
+                        <h3>Gouri Sankar A</h3>
+                        <div class="author-title">Junior Software Developer & Cybersecurity Researcher</div>
+                        <p class="author-bio">
+                            Passionate about building secure software solutions with a focus on IoT security. 
+                            As a cybersecurity researcher, I specialize in developing intelligent systems 
+                            that protect connected devices from emerging threats. My work combines software 
+                            engineering principles with cutting-edge security research to create robust defenses.
+                        </p>
+                        <div class="author-social">
+                            <a href="https://github.com/g0w6y" class="social-link github" target="_blank" title="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://linkedin.com/in/g0w6y" class="social-link linkedin" target="_blank" title="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="https://twitter.com/g0w6y" class="social-link twitter" target="_blank" title="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="mailto: g0w6y@duck.com" class="social-link email" title="Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://g0w6y.github.io/g0w6y-portfolio/" class="social-link portfolio" target="_blank" title="Portfolio">
+                                <i class="fas fa-globe"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>© 2023 RIOT IDS/IPS | <a href="https://github.com/g0w6y" target="_blank">GitHub Repository</a> | MIT License</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#4361ee" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#4361ee",
+                    "opacity": 0.3,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 3,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out"
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "push" }
+                }
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animation triggers
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    if (entry.target.classList.contains('about-image-inner')) {
+                        entry.target.style.animation = 'float 6s ease-in-out infinite';
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.about-image-inner, .author-card').forEach((element) => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
