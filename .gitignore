@@ -1,0 +1,48 @@
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.joblib
+
+# Logs and generated data
+*.log
+*.csv
+*.json
+
+# Flask session/cache files
+instance/
+.env
+*.env
+
+# Local system files
+.DS_Store
+Thumbs.db
+
+# Model files
+iot_anomaly_model.pkl
+*.model
+
+# Git configuration
+.gitconfig
+.gitignore  # (only ignore if you’re committing this elsewhere)
+
+# IDE/workspace files
+.vscode/
+*.code-workspace
+*.idea/
+*.swp
+*.swo
+
+# Security
+detector.log
+attack_simulation.log
+device_data.log
+
+# Remove any credentials/configs
+config.json
+secrets.json
+*.pem
+*.key
+*.crt
